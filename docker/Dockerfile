@@ -9,6 +9,9 @@ COPY --chown=quarkus:quarkus mvnw .
 COPY --chown=quarkus:quarkus .mvn .mvn
 COPY --chown=quarkus:quarkus pom.xml .
 
+# ADICIONE ESTA LINHA PARA DAR PERMISSÃO DE EXECUÇÃO
+RUN chmod +x mvnw
+
 # Baixa as dependências (isso otimiza o cache do Docker)
 RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.6.1:go-offline
 
