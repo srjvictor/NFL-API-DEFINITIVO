@@ -27,7 +27,7 @@ FROM quay.io/quarkus/quarkus-micro-image:1.0
 WORKDIR /work/
 
 # Copia os artefatos compilados da etapa de build
-COPY --from=build /home/quarkus/src/target/quarkus-app/ ./
+COPY --from=build /home/quarkus/src/quarkus-app/ ./
 
 RUN chown -R 1001 /work \
     && chmod -R "g+rwX" /work \
