@@ -1,17 +1,37 @@
-# Use the Eclipse temurin alpine official image
-# https://hub.docker.com/_/eclipse-temurin
-FROM eclipse-temurin:21-jdk-alpine
+####
+# Etapa 1: Build da aplicação
+# Usa uma imagem que já vem com Maven e a JDK correta.
+####
+FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:jdk-17 AS build
 
-# Create and change to the app directory.
-WORKDIR /app
+# Copia os arquivos de configuração do Maven
+COPY --chown=quarkus:quarkus mvnw .
+COPY --chown=quarkus:quarkus .mvn .mvn
+COPY --chown=quarkus:quarkus pom.xml .
 
-# Copy local code to the container image.
-COPY docker ./
+# Baixa as dependências (isso otimiza o cache do Docker)
+RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.6.1:go-offline
 
-RUN chmod +x mvnw
+# Copia o código-fonte e compila o projeto
+COPY src src
+RUN ./mvnw -B package -DskipTests
 
-# Build the app.
-RUN ./mvnw -DoutputFile=target/mvn-dependency-list.log -B -DskipTests clean dependency:list install
+####
+# Etapa 2: Imagem final
+# Usa uma imagem mínima, apenas com o necessário para rodar.
+####
+FROM quay.io/quarkus/quarkus-micro-image:1.0
+WORKDIR /work/
 
-# Run the quarkus app
-CMD ["sh", "-c", "java -jar target/quarkus-app/quarkus-run.jar"]
+# Copia os artefatos compilados da etapa de build
+COPY --from=build /home/quarkus/src/target/quarkus-app/ ./
+
+RUN chown -R 1001 /work \
+    && chmod -R "g+rwX" /work \
+    && chown -R 1001:0 /work
+
+EXPOSE 8080
+USER 1001
+
+# Comando para iniciar a aplicação
+CMD ["java", "-jar", "quarkus-run.jar"]
