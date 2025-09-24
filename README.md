@@ -37,7 +37,7 @@ A aplicação utiliza o Hibernate ORM com Panache para a camada de persistência
 
 O projeto está configurado para usar um banco de dados H2 em memória com a opção `drop-and-create`, o que significa que o banco de dados é recriado a cada reinicialização da aplicação.
 
-O arquivo `import.sql` é executado na inicialização para popular o banco de dados com dados de exemplo, incluindo:
+O arquivo `import-nfl.sql` é executado na inicialização para popular o banco de dados com dados de exemplo, incluindo:
 * Estádios
 * Posições
 * Times

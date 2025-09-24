@@ -11,6 +11,14 @@
             </ModuleState>
           </value>
         </entry>
+        <entry key="api-nfl (1)">
+          <value>
+            <ModuleState>
+              <option name="hash" value="-2081616308" />
+              <option name="version" value="1" />
+            </ModuleState>
+          </value>
+        </entry>
       </map>
     </option>
   </component>
