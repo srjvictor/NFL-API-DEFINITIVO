@@ -1,77 +1,138 @@
-# api-nfl
+# API da NFL com Quarkus
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+## Visão Geral do Projeto
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+A API da NFL é um serviço RESTful projetado para gerenciar informações sobre times, jogadores e posições da National Football League. Construída com o framework Quarkus, a API oferece operações CRUD (Criar, Ler, Atualizar, Excluir) para cada uma dessas entidades, além de endpoints de consulta personalizados.
 
-## Running the application in dev mode
+A aplicação utiliza o Hibernate ORM com Panache para a camada de persistência e um banco de dados H2 em memória, que é pré-populado com dados iniciais para facilitar os testes. A documentação da API é gerada automaticamente com OpenAPI e pode ser acessada através da interface do Swagger UI.
 
-You can run your application in dev mode that enables live coding using:
+## Tecnologias Utilizadas
 
-```shell script
-./mvnw quarkus:dev
-```
+* **Framework:** Quarkus
+* **Linguagem:** Java
+* **Acesso a Dados:** Hibernate ORM com Panache
+* **Banco de Dados:** H2 (em memória)
+* **Documentação da API:** OpenAPI / Swagger UI
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+## Como Executar o Projeto
 
-## Packaging and running the application
+**Pré-requisitos:**
+* Java (JDK)
+* Apache Maven
 
-The application can be packaged using:
+**Passos para Execução:**
 
-```shell script
-./mvnw package
-```
+1.  Clone o repositório do projeto.
+2.  Abra um terminal na pasta raiz do projeto.
+3.  Execute o seguinte comando para iniciar a aplicação em modo de desenvolvimento:
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+    ```bash
+    ./mvnw quarkus:dev
+    ```
+4.  A aplicação estará disponível nos seguintes endereços:
+    * **API Base URL:** `http://localhost:8080`
+    * **Swagger UI:** `http://localhost:8080/q/swagger-ui`
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+## Banco de Dados e Dados Iniciais
 
-If you want to build an _über-jar_, execute the following command:
+O projeto está configurado para usar um banco de dados H2 em memória com a opção `drop-and-create`, o que significa que o banco de dados é recriado a cada reinicialização da aplicação.
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+O arquivo `import.sql` é executado na inicialização para popular o banco de dados com dados de exemplo, incluindo:
+* Estádios
+* Posições
+* Times
+* Jogadores
+* Relacionamentos entre Jogador e Posição
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+## Documentação da API
 
-## Creating a native executable
+### Recurso: Times (`/api/times`)
 
-You can create a native executable using:
+| Método | Endpoint                    | Descrição                                         |
+| :----- | :-------------------------- | :------------------------------------------------ |
+| `POST` | `/`                         | Cria um novo time.                      |
+| `GET`  | `/`                         | Lista todos os times.                   |
+| `GET`  | `/{id}`                     | Busca um time pelo seu ID.              |
+| `PUT`  | `/{id}`                     | Atualiza as informações de um time existente. |
+| `DELETE`| `/{id}`                     | Deleta um time.                         |
+| `GET`  | `/buscar`                   | Busca times por conferência (`AFC` ou `NFC`). |
 
-```shell script
-./mvnw package -Dnative
-```
+### Recurso: Jogadores (`/api/jogadores`)
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+| Método | Endpoint                    | Descrição                                         |
+| :----- | :-------------------------- | :------------------------------------------------ |
+| `POST` | `/`                         | Cria um novo jogador.                   |
+| `GET`  | `/`                         | Lista todos os jogadores.               |
+| `GET`  | `/{id}`                     | Busca um jogador pelo seu ID.           |
+| `PUT`  | `/{id}`                     | Atualiza o nome e o número de um jogador. |
+| `DELETE`| `/{id}`                     | Deleta um jogador.                      |
+| `GET`  | `/portime/{timeId}`         | Lista todos os jogadores de um time específico. |
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
+### Recurso: Posições (`/api/posicoes`)
 
-You can then execute your native executable with: `./target/api-nfl-1.0.0-SNAPSHOT-runner`
+| Método | Endpoint                    | Descrição                                         |
+| :----- | :-------------------------- | :------------------------------------------------ |
+| `POST` | `/`                         | Cria uma nova posição.                  |
+| `GET`  | `/`                         | Lista todas as posições.                |
+| `GET`  | `/{id}`                     | Busca uma posição pelo seu ID.          |
+| `PUT`  | `/{id}`                     | Atualiza uma posição existente.         |
+| `DELETE`| `/{id}`                     | Deleta uma posição.                     |
+| `GET`  | `/buscar`                   | Busca uma posição pela sua sigla (ex: `QB`). |
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+---
 
-## Related Guides
+## Instrução de Uso do Thunder Client
 
-- JDBC Driver - H2 ([guide](https://quarkus.io/guides/datasource)): Connect to the H2 database via JDBC
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- RESTEasy Classic ([guide](https://quarkus.io/guides/resteasy)): REST endpoint framework implementing Jakarta REST and more
+O Thunder Client é uma extensão do VS Code para testar APIs.
 
-## Provided Code
+### 1. Instalação
 
-### Hibernate ORM
+1.  No VS Code, vá para a aba **Extensions**.
+2.  Procure por **Thunder Client** e clique em **Install**.
 
-Create your first JPA entity
+### 2. Exemplos de Requisições
 
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
+#### a) Listar todos os Times (GET)
+* **Método:** `GET`
+* **URL:** `http://localhost:8080/api/times`
 
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
+#### b) Buscar Jogador por ID (GET com Variável de Caminho)
+* **Método:** `GET`
+* **URL:** `http://localhost:8080/api/jogadores/1`
 
+#### c) Buscar Posição por Sigla (GET com Parâmetro de Consulta)
+* **Método:** `GET`
+* **URL:** `http://localhost:8080/api/posicoes/buscar?sigla=QB`
 
-### RESTEasy JAX-RS
+#### d) Criar um Novo Jogador (POST com Corpo)
+* **Método:** `POST`
+* **URL:** `http://localhost:8080/api/jogadores`
+* **Aba Body -> JSON:**
+    ```json
+    {
+      "nome": "CeeDee Lamb",
+      "numeroCamisa": 88,
+      "timeId": 2,
+      "posicoesIds": [3]
+    }
+    ```
 
-Easily start your RESTful Web Services
+#### e) Atualizar um Time (PUT)
+* **Método:** `PUT`
+* **URL:** `http://localhost:8080/api/times/1`
+* **Aba Body -> JSON:**
+    ```json
+    {
+        "nome": "Green Bay Packers FC",
+        "cidade": "Green Bay",
+        "conferencia": "NFC",
+        "estadio": {
+            "nome": "Lambeau Field",
+            "capacidade": 81441
+        }
+    }
+    ```
 
-[Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
+#### f) Deletar um Jogador (DELETE)
+* **Método:** `DELETE`
+* **URL:** `http://localhost:8080/api/jogadores/12`
