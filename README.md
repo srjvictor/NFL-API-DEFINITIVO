@@ -31,7 +31,7 @@ A aplicação utiliza o Hibernate ORM com Panache para a camada de persistência
     ```
 4.  A aplicação estará disponível nos seguintes endereços:
     * **API Base URL:** `http://localhost:8080`
-    * **Swagger UI:** `http://localhost:8080/q/swagger-ui`
+    * **Swagger UI:** `http://localhost:8080/documentacao/`
 
 ## Banco de Dados e Dados Iniciais
 
