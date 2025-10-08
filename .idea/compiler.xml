@@ -7,11 +7,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api-nfl (1)" />
+        <module name="api-nfl" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="api-nfl" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
